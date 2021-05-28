@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-const Home = () => import('../views/home/Home')
+const Login = () => import('../views/user/Login')
 
 // 1.安装插件
 Vue.use(VueRouter)
@@ -10,11 +10,11 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '',
-    redirect: '/home'
+    redirect: '/login'
   },
   {
-    path: '/home',
-    component: Home
+    path: '/login',
+    component: Login
   },
   ]
 
