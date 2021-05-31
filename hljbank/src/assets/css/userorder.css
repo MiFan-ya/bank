@@ -1,0 +1,124 @@
+.page {
+    float: right;
+  }  
+
+.dialog-col1 {
+    width: 850px;
+    height: 210px;
+    border-radius: 2px;
+    border: solid 1px #f1f2f5;
+    margin-bottom: 20px;
+  }
+  .dialog-col1-div,
+  .dialog-col2-div,
+  .dialog-col3-div {
+    width: 850px;
+    height: 40px;
+    background-color: #fafafa;
+    border-radius: 2px 2px 0px 0px;
+    border: solid 1px #f1f2f5;
+  }
+  .dialog-col1-div p,
+  .dialog-col2-div p,
+  .dialog-col3-div p {
+    width: 57px;
+    height: 15px;
+    font-family: MicrosoftYaHei;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    letter-spacing: 0px;
+    color: #999999;
+    margin-top: 12px;
+    margin-left: 20px;
+  }
+  .dialog-col2 {
+    width: 850px;
+    height: 120px;
+    border-radius: 2px;
+    border: solid 1px #f1f2f5;
+    margin-bottom: 20px;
+  }
+  .dialog-col3 {
+    width: 850px;
+    height: 210px;
+    border-radius: 2px;
+    border: solid 1px #f1f2f5;
+  }
+  .dialog-col1-ul,
+  .dialog-col2-ul,
+  .dialog-col3-ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin-top: 24px;
+  }
+  .dialog-col1-ul li:nth-child(2n),
+  .dialog-col2-ul li:nth-child(2n) {
+    margin-left: 26px;
+  }
+  .dialog-col3-ul li:nth-child(2n + 3) {
+    margin-left: 26px;
+  }
+  
+  .main-table {
+    margin-left: 14px;
+    margin-top: 18px;
+  }
+
+  .header-btn {
+    width: 70px;
+    height: 32px;
+    background-color: #4877e8;
+    border-radius: 2px;
+    margin-left: 60px;
+    border: none;
+    color: #ffffff;
+  }
+  .header-btn2 {
+    width: 70px;
+    height: 32px;
+    background-color: #ffffff;
+    border-radius: 2px;
+    border: solid 1px #f1f2f5;
+    margin-left: 10px;
+  }
+  .table-a {
+    font-family: MicrosoftYaHei;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    line-height: 16px;
+    letter-spacing: 0px;
+    color: #4877e8;
+  }
+  .pagepagination {
+    margin-top: 30px;
+    margin-right: 30px;
+  }
+  .ql-editor {
+    padding: 0;
+  }
+  .notification-btn{
+    margin-top: 60px;
+  }
+  .notification-btn1{
+    width: 70px;
+      height: 32px;
+      background-color: #4877e8;
+      border-radius: 2px;
+    border: none;
+    margin-left: 375px;
+    color: #ffffff;
+  }
+  .notification-btn2{
+    width: 70px;
+      height: 32px;
+      background-color: #ffffff;
+      border-radius: 2px;
+      border: solid 1px #f1f2f5;
+    margin-left: 10px;
+  }
+.ql-container{
+    height: 400px;
+  }

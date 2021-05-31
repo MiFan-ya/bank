@@ -20,6 +20,7 @@ const routes = [
   {
     path: '/workplace',
     name: 'Workplace',
+    redirect: '/userorder',
     meta:{title:'系统主页'},
     component: () => import('../views/home/Workplace.vue'),
     children: [
@@ -27,6 +28,11 @@ const routes = [
         path: '/userorder',
         name: 'Userorder',
         component: () => import('../views/home/Userorder.vue'),
+      },
+      {
+        path: '/usermanagement',
+        name: 'Usermanagement',
+        component: () => import('../views/home/Usermanagement.vue'),
       },
     ]
   }
