@@ -19,7 +19,7 @@
                     ><i class="el-icon-setting"></i> 用户设置</el-dropdown-item
                   >
                   <el-dropdown-item divided
-                    ><i class="el-icon-setting"></i>登出</el-dropdown-item
+                    ><img src="../../assets/img/out.png" style="margin-right:2px" width="17px" height="15px"> 登出</el-dropdown-item
                   >
                 </el-dropdown-menu>
               </el-dropdown>

@@ -4,19 +4,22 @@
       <p class="header-p">订单管理</p>
       <div style="min-width: 800px; margin-left: 14px; margin-top: 21px">
         <span>项目名称：</span>
-        <input class="header-input" type="text" />
+        <input class="header-input" v-model="projectName" type="text" />
         <span style="padding-left: 48px">企业名称：</span>
-        <input class="header-input" type="text" />
+        <input class="header-input" v-model="enterpriseName" type="text" />
         <button class="header-btn">查询</button>
-        <button class="header-btn2">重置</button>
+        <button class="header-btn2" @click="reset">重置</button>
       </div>
     </div>
     <div class="main-table">
       <el-table
-        :data="tableData"
+        :data="
+          tableData.slice((currentPage - 1) * pagesize, currentPage * pagesize)
+        "
         border
         :header-cell-style="{ background: '#fafafa' }"
         style="width: 1621px"
+        class="table-t"
       >
         <el-table-column type="index" label="序号" width="50">
         </el-table-column>
@@ -143,7 +146,15 @@
     </el-dialog>
     <div class="pagepagination">
       <!-- 分页 -->
-      <el-pagination class="page" layout="prev, pager, next" :total="20">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-size="pagesize"
+        class="page"
+        layout="prev, pager, next"
+        :total="tableData.length"
+      >
       </el-pagination>
     </div>
   </div>
@@ -158,6 +169,10 @@ export default {
       dialogFormVisible: false, //弹出框
       dialogFormVisibletwo: false, //弹出框
       content: "", // 编辑器的内容
+      currentPage: 1, //初始页
+      pagesize: 10, //初始显示条数
+      projectName:"",
+      enterpriseName:"",
       editorOption: {
         // 编辑器的配置
         // something config
@@ -195,6 +210,41 @@ export default {
           name: "王小虎",
           address: "上海市普陀区金沙江路 1516 弄",
         },
+        {
+          date: "2016-05-03",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1516 弄",
+        },
+        {
+          date: "2016-05-03",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1516 弄",
+        },
+        {
+          date: "2016-05-03",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1516 弄",
+        },
+        {
+          date: "2016-05-03",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1516 弄",
+        },
+        {
+          date: "2016-05-03",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1516 弄",
+        },
+        {
+          date: "2016-05-03",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1516 弄",
+        },
+        {
+          date: "2016-05-03",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1516 弄",
+        },
       ],
     };
   },
@@ -222,6 +272,19 @@ export default {
     },
     handleNotification(row) {
       this.dialogFormVisibletwo = true;
+    },
+    //分页
+    handleSizeChange: function (size) {
+      this.pagesize = size;
+      console.log(this.pagesize); //每页下拉显示数据
+    },
+    handleCurrentChange: function (currentPage) {
+      this.currentPage = currentPage;
+      console.log(this.currentPage); //点击第几页
+    },
+    reset(){
+      this.projectName ='';
+      this.enterpriseName='';
     },
   },
 };
@@ -273,22 +336,25 @@ input {
   border: solid 1px #f1f2f5;
 }
 .header-p {
-    margin-top: 20px;
-    margin-left: 14px;
-    font-weight :bold;
-    font-size: 18px;
-    font-stretch: normal;
-    letter-spacing: 0px;
-    color: #333333;
-  }
-  li span {
-    padding-right: 15px;
-    padding-left: 21px;
-    font-family: MicrosoftYaHei;
-    font-size: 14px;
-    font-weight: normal;
-    font-stretch: normal;
-    letter-spacing: 0px;
-    color: #666666;
-  }
+  margin-top: 20px;
+  margin-left: 14px;
+  font-weight: bold;
+  font-size: 18px;
+  font-stretch: normal;
+  letter-spacing: 0px;
+  color: #333333;
+}
+li span {
+  padding-right: 15px;
+  padding-left: 21px;
+  font-family: MicrosoftYaHei;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  letter-spacing: 0px;
+  color: #666666;
+}
+::v-deep .el-dialog__headerbtn{
+top: 12px;
+}
 </style>
