@@ -20,6 +20,7 @@
         :header-cell-style="{ background: '#fafafa' }"
         style="width: 1621px"
         class="table-t"
+        v-loading="tableloading"
       >
         <el-table-column type="index" label="序号" width="50">
         </el-table-column>
@@ -63,23 +64,23 @@
           <ul class="dialog-col1-ul">
             <li>
               <span>申贷编号</span>
-              <input type="text" />
+              <input disabled type="text" />
             </li>
             <li>
               <span>申请日期</span>
-              <input type="text" />
+              <input disabled type="text" />
             </li>
             <li>
               <span>开户银行</span>
-              <input type="text" />
+              <input disabled type="text" />
             </li>
             <li>
               <span>回款账号</span>
-              <input type="text" />
+              <input disabled type="text" />
             </li>
             <li>
               <span>审批额度</span>
-              <input type="text" />
+              <input disabled type="text" />
             </li>
           </ul>
         </div>
@@ -90,11 +91,11 @@
           <ul class="dialog-col2-ul">
             <li>
               <span style="width: 92px; float: left">统一社会信用代码</span>
-              <input type="text" />
+              <input disabled type="text" />
             </li>
             <li>
               <span>企业名称</span>
-              <input type="text" />
+              <input disabled type="text" />
             </li>
           </ul>
         </div>
@@ -105,23 +106,23 @@
           <ul class="dialog-col3-ul">
             <li>
               <span>项目名称</span>
-              <input style="width: 700px" type="text" />
+              <input disabled style="width: 700px" type="text" />
             </li>
             <li>
               <span>中标日期</span>
-              <input type="text" />
+              <input disabled type="text" />
             </li>
             <li>
               <span>中标金额</span>
-              <input type="text" />
+              <input disabled type="text" />
             </li>
             <li>
               <span>中标编号</span>
-              <input type="text" />
+              <input disabled type="text" />
             </li>
             <li>
               <span style="padding-right: 30px">采购人</span>
-              <input type="text" />
+              <input disabled type="text" />
             </li>
           </ul>
         </div>
@@ -166,13 +167,14 @@ import { quillEditor } from "vue-quill-editor";
 export default {
   data() {
     return {
+      tableloading: true,
       dialogFormVisible: false, //弹出框
       dialogFormVisibletwo: false, //弹出框
       content: "", // 编辑器的内容
       currentPage: 1, //初始页
       pagesize: 10, //初始显示条数
-      projectName:"",
-      enterpriseName:"",
+      projectName: "",
+      enterpriseName: "",
       editorOption: {
         // 编辑器的配置
         // something config
@@ -252,15 +254,25 @@ export default {
     quillEditor,
   },
   created() {
+    
     this.content = `
                                                                                                                                                                                               编号：__________
 
 
                                                                                               政府采购合同融资告知函
     `;
-    this.editor.container.style.height = `${500}px`;
+    
+  },
+  mounted () {
+    this.tableload();
   },
   methods: {
+    tableload() {
+      console.log('123');
+      setTimeout(() => {
+        this.tableloading = false;
+      }, 500);
+    },
     onSubmit() {
       console.log("submit!");
     },
@@ -276,15 +288,15 @@ export default {
     //分页
     handleSizeChange: function (size) {
       this.pagesize = size;
-      console.log(this.pagesize); //每页下拉显示数据
+      //每页下拉显示数据
     },
     handleCurrentChange: function (currentPage) {
       this.currentPage = currentPage;
-      console.log(this.currentPage); //点击第几页
+      //点击第几页
     },
-    reset(){
-      this.projectName ='';
-      this.enterpriseName='';
+    reset() {
+      this.projectName = "";
+      this.enterpriseName = "";
     },
   },
 };
@@ -335,6 +347,10 @@ input {
   border-radius: 2px;
   border: solid 1px #f1f2f5;
 }
+.header-input:focus {
+  outline: rgb(24 144 255 / 20%);
+  box-shadow: 0 0 0 2px rgb(24 144 255 / 20%);
+}
 .header-p {
   margin-top: 20px;
   margin-left: 14px;
@@ -354,7 +370,29 @@ li span {
   letter-spacing: 0px;
   color: #666666;
 }
-::v-deep .el-dialog__headerbtn{
-top: 12px;
+::v-deep .el-dialog__headerbtn {
+  top: 12px;
+}
+::v-deep .el-pager li {
+  width: 32px;
+  height: 32px;
+  background-color: #ffffff;
+  border-radius: 2px;
+  border: solid 1px #f1f2f5;
+  margin-top: -5px;
+}
+::v-deep .el-pager li:nth-child(n + 1) {
+  margin-left: 8px;
+}
+::v-deep .el-pager li.active {
+  width: 32px;
+  height: 32px;
+  background-color: #ffffff;
+  border-radius: 2px;
+  border: solid 1px #4877e8;
+  margin-left: 8px;
+}
+::v-deep .el-pager li.active + li {
+  border-left: solid 1px #f1f2f5;
 }
 </style>

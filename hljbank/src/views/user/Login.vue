@@ -49,7 +49,9 @@
                 class="login-btn"
                 type="primary"
                 @click="submitForm('ruleForm')"
-                >确定</el-button
+                v-loading="fullscreenLoading"
+                element-loading-background="transparent"
+                >确 &ensp; 定</el-button
               >
             </el-form-item>
           </el-form>
@@ -60,19 +62,21 @@
 </template>
 
 <script>
+// import { mapMutations } from "vuex";
 export default {
   data() {
-    var validatePass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入密码"));
-      }
-    };
-    var validateuserid = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入用户名"));
-      }
-    };
+    // var validatePass = (rule, value, callback) => {
+    //   if (value === "") {
+    //     callback(new Error("请输入密码"));
+    //   }
+    // };
+    // var validateuserid = (rule, value, callback) => {
+    //   if (value === "") {
+    //     callback(new Error("请输入用户名"));
+    //   }
+    // };
     return {
+      fullscreenLoading: false,
       pwdType: "password",
       keep: false,
       ruleForm: {
@@ -80,12 +84,40 @@ export default {
         userid: "",
       },
       rules: {
-        password: [{ validator: validatePass, trigger: "blur" }],
-        userid: [{ validator: validateuserid, trigger: "blur" }],
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
+        userid: [{ required: true, message: "请输入用户名", trigger: "blur" }],
       },
     };
   },
+  created() {
+    this.getCookie();
+  },
+
   methods: {
+    setCookie(name, pwd, exdays) {
+      var exdate = new Date(); // 获取时间
+      exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays); // 保存的天数
+      // 字符串拼接cookie
+      window.document.cookie =
+        "userid" + "=" + name + ";path=/;expires=" + exdate.toGMTString();
+      window.document.cookie =
+        "userPwd" + "=" + pwd + ";path=/;expires=" + exdate.toGMTString();
+    },
+    // 读取cookie 将用户名和密码回显到input框中
+    getCookie() {
+      if (document.cookie.length > 0) {
+        var arr = document.cookie.split("; "); // 这里显示的格式需要切割一下自己可输出看下
+        for (var i = 0; i < arr.length; i++) {
+          var arr2 = arr[i].split("="); // 再次切割
+          // 判断查找相对应的值
+          if (arr2[0] === "userid") {
+            this.ruleForm.userid = arr2[1]; // 保存到保存数据的地方
+          } else if (arr2[0] === "userPwd") {
+            this.ruleForm.password = arr2[1];
+          }
+        }
+      }
+    },
     showPwd() {
       this.pwdType === "password"
         ? (this.pwdType = "")
@@ -97,14 +129,87 @@ export default {
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
+        console.log("bd");
         if (valid) {
-          alert("submit!");
+          if (this.keep) {
+            // 传入账号名，密码，和保存天数3个参数
+            this.setCookie(this.ruleForm.userid, this.ruleForm.password, 7);
+          } else {
+            // 如果没有选中自动登录，那就清除cookie
+            this.setCookie("", "", -1); // 修改2值都为空，天数为负1天就好了
+          }
+          sessionStorage.setItem("token", "true");
+          this.fullscreenLoading = true;
+          setTimeout(() => {
+            this.fullscreenLoading = false;
+            var date = new Date();
+            var hours =
+              date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+            if (parseInt(hours) <= 12 && parseInt(hours) >= 0) {
+              this.$notify({
+                title: "欢迎",
+                message: "早上好，欢迎回来",
+                type: "success",
+              });
+            } else if (parseInt(hours) <= 18 && parseInt(hours) >= 12) {
+              this.$notify({
+                title: "欢迎",
+                message: "下午好，欢迎回来",
+                type: "success",
+              });
+            } else {
+              this.$notify({
+                title: "欢迎",
+                message: "晚上好，欢迎回来",
+                type: "success",
+              });
+            }
+            let username = this.ruleForm.userid;
+            this.$router.push({
+              path: "/workplace",
+              query: { username },
+            });
+          }, 500);
         } else {
           console.log("error submit!!");
           return false;
         }
       });
     },
+    // 路由守卫 清空Vuex数据
+    // beforeRouteEnter(to, from, next) {
+    //   next(vm => {
+    //     vm.$store.dispatch("setUser", null)
+    //     vm.$store.dispatch("setUsername", null)
+    //     localStorage.removeItem("Flag")
+    //     localStorage.removeItem("Userinfo")
+    //     vm.$store.commit('clearMenu')
+    //   })
+    // },
+    // beforeRouteLeave(to, from, next) {
+    //   // 导航离开该组件的对应路由时调用
+    //   if (this.$store.getters.getCurrentUserList.identity == 'admin' || this.$store.getters.getCurrentUserList.identity == '管理员') {
+    //     next();
+    //   }
+    //   // console.log(to);
+    //   if (this.$store.getters.getCurrentUserList.identity == 'coach' || this.$store.getters.getCurrentUserList.identity == '教练') {
+    //     if (to.path.indexOf('Manage') != -1) {
+    //       next("/");
+    //     }
+    //   }
+    //   if (this.$store.getters.getCurrentUserList.identity == 'normal' || this.$store.getters.getCurrentUserList.identity == '普通用户') {
+    //     let flag = false
+    //     if (to.path.indexOf('Manage') != -1) {
+    //       flag = true
+    //     } else if (to.path.indexOf('Coach') != -1) {
+    //       flag = true
+    //     }
+    //     if (flag == true) {
+    //       next("/");
+    //     }
+    //   }
+    //   next()
+    // }
   },
 };
 </script>
@@ -173,5 +278,13 @@ export default {
   height: 36px;
   border-radius: 2px;
   border: solid 1px #e1e1e1;
+}
+::v-deep .el-input__inner:focus {
+  border-color: #40a9ff;
+  border-right-width: 1px !important;
+  /* box-shadow: 0 0 0 2px rgb(24 144 255 / 20%); */
+}
+::v-deep .el-loading-spinner .path {
+  stroke: #ffffff;
 }
 </style>

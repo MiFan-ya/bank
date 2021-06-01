@@ -18,8 +18,14 @@
                   <el-dropdown-item
                     ><i class="el-icon-setting"></i> 用户设置</el-dropdown-item
                   >
-                  <el-dropdown-item divided
-                    ><img src="../../assets/img/out.png" style="margin-right:2px" width="17px" height="15px"> 登出</el-dropdown-item
+                  <el-dropdown-item divided @click.native="Loginout"
+                    ><img
+                      src="../../assets/img/out.png"
+                      style="margin-right: 2px"
+                      width="17px"
+                      height="15px"
+                    />
+                    登出</el-dropdown-item
                   >
                 </el-dropdown-menu>
               </el-dropdown>
@@ -42,7 +48,7 @@
               <span slot="title">订单管理</span>
               <i class="arrow el-icon-arrow-right"></i>
             </el-menu-item>
-            <el-menu-item index="/usermanagement">
+            <el-menu-item disabled index="/usermanagement">
               <i class="el-icon-user"></i>
               <span slot="title">用户管理</span>
               <i class="arrow el-icon-arrow-right"></i>
@@ -72,6 +78,25 @@ export default {
     },
     handleClose(key, keyPath) {
       console.log(key, keyPath);
+    },
+    Loginout() {
+      this.$confirm("确定要退出登录吗", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          sessionStorage.setItem("token", "false");
+          this.$router.push({
+            path: "/login",
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消登出！",
+          });
+        });
     },
   },
 };
@@ -134,8 +159,8 @@ export default {
   right: 20px;
   top: 25px;
 }
-::v-deep .el-menu-item span{
- color: #333333;
+::v-deep .el-menu-item span {
+  color: #333333;
 }
 ::v-deep .el-menu-item:hover {
   background-color: #f1f2f5;
@@ -148,6 +173,8 @@ export default {
 }
 ::v-deep .el-menu-item.is-active span {
   font-weight: bold;
- 
+}
+::v-deep .el-dropdown-link {
+  cursor: pointer;
 }
 </style>
