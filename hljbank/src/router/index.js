@@ -33,7 +33,7 @@ const routes = [
       {
         path: "/usermanagement",
         name: "Usermanagement",
-        meta: { title: "系统主页" },
+        meta: { title: "系统主页",requireAuth: true },
         component: () => import("../views/home/Usermanagement.vue"),
       },
     ],
@@ -60,7 +60,7 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     if(sessionStorage.getItem("token") == 'true'){
-      next('/userorder');
+      next('/workplace');
     }else{
       next();
     }

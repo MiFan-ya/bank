@@ -63,6 +63,7 @@
 
 <script>
 // import { mapMutations } from "vuex";
+// import Cookies from "js-cookie";
 export default {
   data() {
     // var validatePass = (rule, value, callback) => {
@@ -94,18 +95,22 @@ export default {
   },
 
   methods: {
+    //把登录账号密码保存时间存入cookie
     setCookie(name, pwd, exdays) {
       var exdate = new Date(); // 获取时间
       exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays); // 保存的天数
       // 字符串拼接cookie
       window.document.cookie =
         "userid" + "=" + name + ";path=/;expires=" + exdate.toGMTString();
+      // Cookies.set("userid", name, { expires: 7, path: "/" });
+      // Cookies.set("userPwd", pwd, { expires: 7, path: "/" });
       window.document.cookie =
         "userPwd" + "=" + pwd + ";path=/;expires=" + exdate.toGMTString();
     },
     // 读取cookie 将用户名和密码回显到input框中
     getCookie() {
       if (document.cookie.length > 0) {
+        this.keep =true; //自动登录
         var arr = document.cookie.split("; "); // 这里显示的格式需要切割一下自己可输出看下
         for (var i = 0; i < arr.length; i++) {
           var arr2 = arr[i].split("="); // 再次切割
@@ -118,15 +123,17 @@ export default {
         }
       }
     },
+    //密码显示
     showPwd() {
       this.pwdType === "password"
         ? (this.pwdType = "")
         : (this.pwdType = "password");
       let e = document.getElementsByClassName("el-icon-view")[0];
       this.pwdType == ""
-        ? e.setAttribute("style", "color: #c0c4cc")
-        : e.setAttribute("style", "color: #409EFF");
+        ? e.setAttribute("style", "color:#409EFF ;cursor: pointer;")
+        : e.setAttribute("style", "color:#c0c4cc;cursor: pointer;");
     },
+    //确定 提交表单
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         console.log("bd");
@@ -138,10 +145,13 @@ export default {
             // 如果没有选中自动登录，那就清除cookie
             this.setCookie("", "", -1); // 修改2值都为空，天数为负1天就好了
           }
+          //登录拦截
           sessionStorage.setItem("token", "true");
+          //确定按钮加载动画
           this.fullscreenLoading = true;
           setTimeout(() => {
             this.fullscreenLoading = false;
+            //登录成功提示语
             var date = new Date();
             var hours =
               date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
@@ -164,6 +174,7 @@ export default {
                 type: "success",
               });
             }
+            //跳转页面
             let username = this.ruleForm.userid;
             this.$router.push({
               path: "/workplace",

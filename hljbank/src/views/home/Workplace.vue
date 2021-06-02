@@ -4,7 +4,7 @@
       <el-header height="100px">
         <div class="header">
           <div class="header_logo">
-            <a href="">
+            <a href="/userorder">
               <img src="../../assets/img/logo.png" width="240px" height="100px"
             /></a>
           </div>
@@ -12,7 +12,7 @@
             <div class="header_right_top">
               <el-dropdown trigger="click">
                 <span class="el-dropdown-link">
-                  12345567789<i class="el-icon-arrow-down el-icon--right"></i>
+                  {{userName}}<i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown" style="width: 160px">
                   <el-dropdown-item
@@ -48,7 +48,7 @@
               <span slot="title">订单管理</span>
               <i class="arrow el-icon-arrow-right"></i>
             </el-menu-item>
-            <el-menu-item disabled index="/usermanagement">
+            <el-menu-item index="/usermanagement">
               <i class="el-icon-user"></i>
               <span slot="title">用户管理</span>
               <i class="arrow el-icon-arrow-right"></i>
@@ -70,7 +70,9 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      userName:'12345567789',
+    };
   },
   methods: {
     handleOpen(key, keyPath) {
@@ -114,6 +116,7 @@ export default {
 }
 ::v-deep .el-menu {
   height: 100%;
+  
 }
 ::v-deep .el-footer {
   background-color: #f0f2f5;
@@ -162,8 +165,12 @@ export default {
 ::v-deep .el-menu-item span {
   color: #333333;
 }
+::v-deep .el-menu-item.is-active span,.el-menu-item:focus span {
+  font-weight: bold;
+}
 ::v-deep .el-menu-item:hover {
   background-color: #f1f2f5;
+  font-weight: bold;
 }
 ::v-deep .el-menu-item:focus {
   background-color: #f1f2f5;
@@ -171,8 +178,8 @@ export default {
 ::v-deep .el-menu-item.is-active {
   background-color: #f1f2f5 !important;
 }
-::v-deep .el-menu-item.is-active span {
-  font-weight: bold;
+::v-deep .el-menu-item:hover i,.el-menu-item:focus i {
+    color: #409EFF;
 }
 ::v-deep .el-dropdown-link {
   cursor: pointer;

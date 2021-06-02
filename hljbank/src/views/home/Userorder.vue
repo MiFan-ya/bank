@@ -7,7 +7,7 @@
         <input class="header-input" v-model="projectName" type="text" />
         <span style="padding-left: 48px">企业名称：</span>
         <input class="header-input" v-model="enterpriseName" type="text" />
-        <button class="header-btn">查询</button>
+        <button class="header-btn" @click="onSubmit">查询</button>
         <button class="header-btn2" @click="reset">重置</button>
       </div>
     </div>
@@ -168,20 +168,23 @@ export default {
   data() {
     return {
       tableloading: true,
-      dialogFormVisible: false, //弹出框
-      dialogFormVisibletwo: false, //弹出框
+      dialogFormVisible: false, //项目详情弹出框
+      dialogFormVisibletwo: false, //签发告知函弹出框
       content: "", // 编辑器的内容
       currentPage: 1, //初始页
       pagesize: 10, //初始显示条数
-      projectName: "",
-      enterpriseName: "",
+      projectName: "", //项目名称input
+      enterpriseName: "", //企业名称input
       editorOption: {
         // 编辑器的配置
         // something config
         modules: {
+          //富文本编辑器头部内容
           toolbar: [
             ["bold", "italic", "underline", "strike"], // toggled buttons
             [{ header: 1 }, { header: 2 }],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            [{ 'indent': '-1'}, { 'indent': '+1' }],
             [{ size: ["small", false, "large", "huge"] }],
             ["blockquote", "code-block"],
           ],
@@ -251,37 +254,61 @@ export default {
     };
   },
   components: {
+    // 富文本
     quillEditor,
   },
   created() {
-    
+    //富文本框的初始内容
     this.content = `
                                                                                                                                                                                               编号：__________
 
 
                                                                                               政府采购合同融资告知函
-    `;
-    
+     `;
   },
-  mounted () {
+  mounted() {
     this.tableload();
   },
   methods: {
+    // 表格加载动画
     tableload() {
-      console.log('123');
+      this.tableloading = true;
       setTimeout(() => {
         this.tableloading = false;
       }, 500);
     },
+    // 获取表格data
+    gettabledata() {},
+    //查询表单提交
     onSubmit() {
-      console.log("submit!");
+      if (this.projectName == "" && this.enterpriseName == "") {
+        this.$message({
+          type: "warning",
+          message: "查询条件不能为空！",
+        });
+      } else {
+        this.tableload();
+        this.$message({
+        type: "warning",
+        message: "查询中！",
+      });
+      }
+      
+    },
+    //重置表单 清空表单数据
+    reset() {
+      this.projectName = "";
+      this.enterpriseName = "";
     },
     //   resetForm(formName) {
     //     this.$refs[formName].resetFields();
     //   }
+
+    //项目详情
     handleName(row) {
       this.dialogFormVisible = true;
     },
+    //签发告知函
     handleNotification(row) {
       this.dialogFormVisibletwo = true;
     },
@@ -292,11 +319,8 @@ export default {
     },
     handleCurrentChange: function (currentPage) {
       this.currentPage = currentPage;
+      this.tableload();
       //点击第几页
-    },
-    reset() {
-      this.projectName = "";
-      this.enterpriseName = "";
     },
   },
 };
@@ -347,8 +371,9 @@ input {
   border-radius: 2px;
   border: solid 1px #f1f2f5;
 }
+.header-input:hover,
 .header-input:focus {
-  outline: rgb(24 144 255 / 20%);
+  outline: #367ae0;
   box-shadow: 0 0 0 2px rgb(24 144 255 / 20%);
 }
 .header-p {
@@ -394,5 +419,8 @@ li span {
 }
 ::v-deep .el-pager li.active + li {
   border-left: solid 1px #f1f2f5;
+}
+::v-deep .el-table--enable-row-hover .el-table__body tr:hover > td {
+  background-color: #e6f3ff !important;
 }
 </style>
