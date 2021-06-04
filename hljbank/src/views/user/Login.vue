@@ -64,7 +64,7 @@
 <script>
 // import { mapMutations } from "vuex";
 // import Cookies from "js-cookie";
-// import { PUserlogin } from "../../api/index.js";
+import { PUserlogin } from "../../api/index.js";
 export default {
   data() {
     // var validatePass = (rule, value, callback) => {
@@ -139,11 +139,13 @@ export default {
         if (valid) {
           //确定按钮加载动画
           this.fullscreenLoading = true;
-          // let formData = new FormData();
-          // formData.append("password", this.ruleForm.password);
-          // formData.append("userName", this.ruleForm.userid);
-          // PUserlogin(formData).then((res) => {
-          // if (res.code == "01") {
+          let formData = new FormData();
+          formData.append("password", this.ruleForm.password);
+          formData.append("userName", this.ruleForm.userid);
+          PUserlogin(formData).then((res) => {
+          if (res.code == "01") {
+            sessionStorage.setItem("jmToken", res.result.token);
+             sessionStorage.setItem("id", res.result.id);
           if (this.keep) {
             // 传入账号名，密码，和保存天数3个参数
             this.setCookie(this.ruleForm.userid, this.ruleForm.password, 7);
@@ -184,19 +186,19 @@ export default {
             // let username = this.ruleForm.userid;
             this.$router.push({
               path: "/workplace",
-              // query: { username },
+              //  query: { res.result.token },
             });
           }, 500);
-          // } else {
-          //   setTimeout(() => {
-          //     this.$notify({
-          //       message: "账号或密码错误！",
-          //       type: "error",
-          //     });
-          //     this.fullscreenLoading = false;
-          //   }, 500);
-          // }
-          // });
+          } else {
+            setTimeout(() => {
+              this.$notify({
+                message: "账号或密码错误！",
+                type: "error",
+              });
+              this.fullscreenLoading = false;
+            }, 500);
+          }
+          });
         } else {
           console.log("error submit!!");
           return false;

@@ -31,7 +31,7 @@
         <el-table-column prop="name" label="项目名称" width="300">
           <template slot-scope="scope">
             <a class="table-a" @click="handleName(scope.row)">{{
-              scope.row.contractName
+              scope.row.bidName
             }}</a>
           </template>
         </el-table-column>
@@ -58,15 +58,29 @@
         </el-table-column>
         <el-table-column
           align="center"
-          prop="letterStatus"
+          prop="status"
           label="告知函状态"
           width="200"
         >
-         <template slot-scope="scope">
-        <el-tag
-          :type="scope.row.letterStatus==0 ?'info':(scope.row.letterStatus ==1?'warning':'success')"
-          disable-transitions>{{scope.row.letterStatus==0 ?'未签发':(scope.row.letterStatus ==1?'已发送':'通知成功')}}</el-tag>
-      </template>
+          <template slot-scope="scope">
+            <el-tag
+              :type="
+                scope.row.status == 0
+                  ? 'info'
+                  : scope.row.status == 1
+                  ? 'warning'
+                  : 'success'
+              "
+              disable-transitions
+              >{{
+                scope.row.status == 0
+                  ? "未签发"
+                  : scope.row.status == 1
+                  ? "已发送"
+                  : "通知成功"
+              }}</el-tag
+            >
+          </template>
         </el-table-column>
         <el-table-column align="center" prop="opera" label="操作" width="170">
           <template slot-scope="scope">
@@ -234,10 +248,18 @@
     </div>
     <div class="dialog-yl">
       <el-dialog title=" " :visible.sync="dialogFormVisible4">
-        <div class="ql-editor" v-html="content"></div>
+        <div
+          class="ql-editor"
+          style="overflow: auto; height: 750px; margin: 0 auto"
+          v-html="content"
+        ></div>
       </el-dialog>
       <el-dialog title=" " :visible.sync="dialogFormVisible3">
-        <div class="ql-editor" v-html="NContent"></div>
+        <div
+          class="ql-editor"
+          style="overflow: auto; height: 750px; margin: 0 auto"
+          v-html="NContent"
+        ></div>
       </el-dialog>
     </div>
 
@@ -346,11 +368,24 @@ export default {
       let data = {
         pageNum: 1,
         pageSize: 10,
+        userId: sessionStorage.getItem("id"),
       };
       GTabledata(data).then(function (res) {
-        console.log(res);
-        _this.tableData = res.result.data;
-        _this.tableLength = res.result.total;
+        if (res.code == "01") {
+          console.log(res);
+          _this.tableData = res.result.data;
+          _this.tableLength = res.result.total;
+        } else if (res.code == "03") {
+          _this.$message({
+            message: "登录过期！请重新登录！",
+            type: "error",
+          });
+        } else {
+          _this.$message({
+            message: "系统出错！",
+            type: "error",
+          });
+        }
       });
     },
     //查询表单提交
@@ -362,8 +397,9 @@ export default {
         let data = {
           pageNum: 1,
           pageSize: 10,
-          bidNum: this.projectName,
+          bidName: this.projectName,
           companyName: this.enterpriseName,
+          userId: sessionStorage.getItem("id"),
         };
         GSeachtdataboth(data).then((res) => {
           console.log(res);
@@ -375,8 +411,9 @@ export default {
         let data = {
           pageNum: 1,
           pageSize: 10,
-          bidNum: this.projectName,
+          bidName: this.projectName,
           companyName: this.enterpriseName,
+          userId: sessionStorage.getItem("id"),
         };
         GSeachtdata(data).then((res) => {
           console.log(res);
@@ -419,17 +456,20 @@ export default {
       this.Ntid = row.id;
       this.Notificationname = "签发告知函-" + row.contractName;
       this.content = `
-                                                                                                                                                         编号：${row.bidNum}
+                                                                                                                                                    项目编号：${row.bidNum}
                                                                                       
       <h3>                                                                                政府采购合同融资告知函</h3>
       
-              ${row.purchaseName}（采购人全称）
+            ${row.purchaseName}（采购人全称）
+
 
                      鉴于我公司与中国建设银行股份有限公司${row.bankBranch}（一下简称“债权银行”）就${row.creditorBank}政府采购合同
              
-             （合同编号：${row.contractNum}、采购项目编号：${row.projectCode}）进行了政府采购合同融资并签署了《最高额应收账款质
-               
-               押合同》（编号为____________________），根据该合同，我公司将上述应收账款质押给债权银行，特向贵单位发出本通知。
+             （合同编号：${row.contractNum}、采购项目编号：${row.bidNum}）进行了政府采购合同融资并签署
+             
+              了《最高额应收账款质押合同》（编号为____________________），根据该合同，我公司将上述应收账款质押给债权银行，特向
+             
+              贵单位发出本通知。
                       
                       请贵单位将采购资金支付到政府采购合同中注明的债权银行。
                
@@ -473,6 +513,7 @@ export default {
         this.gzhSave();
         let formData = new FormData();
         formData.append("id", this.Ntid);
+        formData.append("userId", sessionStorage.getItem("id"));
         POrderPush(formData).then((res) => {
           if (res.code == "01") {
             this.$message({
@@ -495,6 +536,7 @@ export default {
       let formData = new FormData();
       formData.append("id", this.Ntid);
       formData.append("noteMessage", this.content);
+      formData.append("userId", sessionStorage.getItem("id"));
       PSendhan(formData).then((res) => {
         if (res.code == "01") {
           console.log("1");
@@ -522,6 +564,7 @@ export default {
       let data = {
         pageNum: this.currentPage,
         pageSize: 10,
+        userId: sessionStorage.getItem("id"),
       };
       GTabledata(data).then(function (res) {
         console.log(res);
@@ -580,6 +623,9 @@ input {
   width: 990px;
   height: 820px;
   border-radius: 2px;
+}
+::v-deep .dialog-yl .el-dialog__body {
+  padding: 25px 5px;
 }
 .header-input {
   width: 290px;

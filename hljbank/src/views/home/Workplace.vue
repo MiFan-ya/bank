@@ -16,10 +16,10 @@
                   }}<i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown" style="width: 160px">
-                  <el-dropdown-item disabled
+                  <!-- <el-dropdown-item disabled
                     ><i class="el-icon-setting"></i> 用户设置</el-dropdown-item
-                  >
-                  <el-dropdown-item divided @click.native="Loginout"
+                  > -->
+                  <el-dropdown-item @click.native="Loginout"
                     ><img
                       src="../../assets/img/out.png"
                       style="margin-right: 2px"
@@ -49,11 +49,11 @@
               <span slot="title">订单管理</span>
               <i class="arrow el-icon-arrow-right"></i>
             </el-menu-item>
-            <el-menu-item disabled index="/usermanagement">
+            <!-- <el-menu-item disabled index="/usermanagement">
               <i class="el-icon-user"></i>
               <span slot="title">用户管理</span>
               <i class="arrow el-icon-arrow-right"></i>
-            </el-menu-item>
+            </el-menu-item> -->
           </el-menu>
         </el-aside>
         <el-container>
@@ -81,8 +81,8 @@ export default {
   methods: {
     getUserName(){
       var Uname = sessionStorage.getItem("username");
-      var Unamearr = JSON.parse(Uname);
-      this.userName = Unamearr;
+      // var Unamearr = JSON.parse(Uname);
+      this.userName = Uname;
     },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);

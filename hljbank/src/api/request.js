@@ -13,7 +13,7 @@ const { Message, Loading } = require("element-ui");
 //请求拦截器
 service.interceptors.request.use(
   (config) => {
-    let Authorization = sessionStorage.getItem("bipToken");
+    let Authorization = sessionStorage.getItem("jmToken");
     if (Authorization) {
       config.headers["Authorization"] = Authorization;
     }
@@ -118,7 +118,7 @@ export function fetch(url, params = {}, headers = {}) {
     service
       .get(url, {
         params: params,
-        headers,
+        headers:{"Authorization":sessionStorage.getItem("jmToken")},
       })
       .then((res) => {
         // this.$message("请求成功");
@@ -137,7 +137,7 @@ export function fetch(url, params = {}, headers = {}) {
 export function post(url, data = {}, headers = {}) {
   return new Promise((resolve, reject) => {
     service
-      .post(url, data, { headers })
+      .post(url, data, { headers:{"Authorization":sessionStorage.getItem("jmToken")} })
       .then((res) => {
         if (res == undefined) {
           throw new Error("请求失败，请检查网络是否已连接");
