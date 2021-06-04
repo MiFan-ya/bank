@@ -12,10 +12,11 @@
             <div class="header_right_top">
               <el-dropdown trigger="click">
                 <span class="el-dropdown-link">
-                  {{userName}}<i class="el-icon-arrow-down el-icon--right"></i>
+                  {{ userName
+                  }}<i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown" style="width: 160px">
-                  <el-dropdown-item
+                  <el-dropdown-item disabled
                     ><i class="el-icon-setting"></i> 用户设置</el-dropdown-item
                   >
                   <el-dropdown-item divided @click.native="Loginout"
@@ -48,7 +49,7 @@
               <span slot="title">订单管理</span>
               <i class="arrow el-icon-arrow-right"></i>
             </el-menu-item>
-            <el-menu-item index="/usermanagement">
+            <el-menu-item disabled index="/usermanagement">
               <i class="el-icon-user"></i>
               <span slot="title">用户管理</span>
               <i class="arrow el-icon-arrow-right"></i>
@@ -71,10 +72,18 @@
 export default {
   data() {
     return {
-      userName:'12345567789',
+      userName: "",
     };
   },
+  created () {
+     this.getUserName();
+  },
   methods: {
+    getUserName(){
+      var Uname = sessionStorage.getItem("username");
+      var Unamearr = JSON.parse(Uname);
+      this.userName = Unamearr;
+    },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
     },
@@ -116,7 +125,6 @@ export default {
 }
 ::v-deep .el-menu {
   height: 100%;
-  
 }
 ::v-deep .el-footer {
   background-color: #f0f2f5;
@@ -165,7 +173,7 @@ export default {
 ::v-deep .el-menu-item span {
   color: #333333;
 }
-::v-deep .el-menu-item.is-active span,.el-menu-item:focus span {
+/* ::v-deep .el-menu-item.is-active span,.el-menu-item:focus span {
   font-weight: bold;
 }
 ::v-deep .el-menu-item:hover {
@@ -180,6 +188,14 @@ export default {
 }
 ::v-deep .el-menu-item:hover i,.el-menu-item:focus i {
     color: #409EFF;
+} */
+::v-deep .el-menu-item {
+  background-color: #f1f2f5;
+  font-weight: bold;
+}
+::v-deep .el-menu-item i,
+.el-menu-item i {
+  color: #409eff;
 }
 ::v-deep .el-dropdown-link {
   cursor: pointer;

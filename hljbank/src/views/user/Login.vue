@@ -64,6 +64,7 @@
 <script>
 // import { mapMutations } from "vuex";
 // import Cookies from "js-cookie";
+// import { PUserlogin } from "../../api/index.js";
 export default {
   data() {
     // var validatePass = (rule, value, callback) => {
@@ -93,7 +94,6 @@ export default {
   created() {
     this.getCookie();
   },
-
   methods: {
     //把登录账号密码保存时间存入cookie
     setCookie(name, pwd, exdays) {
@@ -110,7 +110,7 @@ export default {
     // 读取cookie 将用户名和密码回显到input框中
     getCookie() {
       if (document.cookie.length > 0) {
-        this.keep =true; //自动登录
+        this.keep = true; //自动登录
         var arr = document.cookie.split("; "); // 这里显示的格式需要切割一下自己可输出看下
         for (var i = 0; i < arr.length; i++) {
           var arr2 = arr[i].split("="); // 再次切割
@@ -136,8 +136,14 @@ export default {
     //确定 提交表单
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
-        console.log("bd");
         if (valid) {
+          //确定按钮加载动画
+          this.fullscreenLoading = true;
+          // let formData = new FormData();
+          // formData.append("password", this.ruleForm.password);
+          // formData.append("userName", this.ruleForm.userid);
+          // PUserlogin(formData).then((res) => {
+          // if (res.code == "01") {
           if (this.keep) {
             // 传入账号名，密码，和保存天数3个参数
             this.setCookie(this.ruleForm.userid, this.ruleForm.password, 7);
@@ -145,10 +151,10 @@ export default {
             // 如果没有选中自动登录，那就清除cookie
             this.setCookie("", "", -1); // 修改2值都为空，天数为负1天就好了
           }
+
           //登录拦截
           sessionStorage.setItem("token", "true");
-          //确定按钮加载动画
-          this.fullscreenLoading = true;
+          sessionStorage.setItem("username", this.ruleForm.userid);
           setTimeout(() => {
             this.fullscreenLoading = false;
             //登录成功提示语
@@ -175,12 +181,22 @@ export default {
               });
             }
             //跳转页面
-            let username = this.ruleForm.userid;
+            // let username = this.ruleForm.userid;
             this.$router.push({
               path: "/workplace",
-              query: { username },
+              // query: { username },
             });
           }, 500);
+          // } else {
+          //   setTimeout(() => {
+          //     this.$notify({
+          //       message: "账号或密码错误！",
+          //       type: "error",
+          //     });
+          //     this.fullscreenLoading = false;
+          //   }, 500);
+          // }
+          // });
         } else {
           console.log("error submit!!");
           return false;
