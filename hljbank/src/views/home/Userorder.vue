@@ -521,7 +521,7 @@ export default {
               type: "success",
             });
             this.dialogFormVisibletwo = false;
-            this.gettabledata();
+            this.handleCurrentChange(this.currentPage);
           } else {
             this.$message({
               message: "发送失败！请稍后再试！",
