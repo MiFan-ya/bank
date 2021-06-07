@@ -382,7 +382,7 @@ export default {
           });
         } else {
           _this.$message({
-            message: "系统出错！",
+            message: res.message,
             type: "error",
           });
         }
@@ -524,7 +524,7 @@ export default {
             this.handleCurrentChange(this.currentPage);
           } else {
             this.$message({
-              message: "发送失败！请稍后再试！",
+               message: res.message,
               type: "error",
             });
           }
